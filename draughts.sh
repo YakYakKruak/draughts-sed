@@ -15,48 +15,40 @@ blackwhite=`printf "\033[40;1m"`
 white=`printf "\033[47m"`
 blackblack=`printf "\033[40;30;1m"`
 
-click() {
-    desk=`echo "$desk" | sed "
-    1s/\([aceg]8\)/${blackblack}\1${esc}/g
-    3s/\([aceg]6\)/${blackblack}\1${esc}/g
-    5s/\([aceg]4\)/${blackwhite}\1${esc}/g
-    7s/\([aceg]2\)/${blackwhite}\1${esc}/g
-    1s/\([bdfh]8\)/${white}\1${esc}/g
-    3s/\([bdfh]6\)/${white}\1${esc}/g
-    5s/\([bdfh]4\)/${white}\1${esc}/g
-    7s/\([bdfh]2\)/${white}\1${esc}/g
-    2s/\([aceg]7\)/${white}\1${esc}/g
-    4s/\([aceg]5\)/${white}\1${esc}/g
-    6s/\([aceg]3\)/${white}\1${esc}/g
-    8s/\([aceg]1\)/${white}\1${esc}/g
-    2s/\([bdfh]7\)/${blackblack}\1${esc}/g
-    4s/\([bdfh]5\)/${blackwhite}\1${esc}/g
-    6s/\([bdfh]3\)/${blackwhite}\1${esc}/g
-    8s/\([bdfh]1\)/${blackwhite}\1${esc}/g
-    1s/\([aceg]8\)/• /g
-    2s/\([bdfh]7\)/• /g
-    3s/\([aceg]6\)/• /g
-    6s/\([bdfh]3\)/• /g
-    7s/\([aceg]2\)/• /g
-    8s/\([bdfh]1\)/• /g
-    s/[a-z][1-8]/  /g
-"`
-#    3s///g
-#    5s///g
-#    7s///g
-#    
-#    2s///g
-#    4s///g
-#    6s///g
-#    8s///g"
+desk=`echo "$desk" | sed "
+1s/\([aceg]8\)/${blackblack}\1${esc}/g
+3s/\([aceg]6\)/${blackblack}\1${esc}/g
+5s/\([aceg]4\)/${blackwhite}\1${esc}/g
+7s/\([aceg]2\)/${blackwhite}\1${esc}/g
+1s/\([bdfh]8\)/${white}\1${esc}/g
+3s/\([bdfh]6\)/${white}\1${esc}/g
+5s/\([bdfh]4\)/${white}\1${esc}/g
+7s/\([bdfh]2\)/${white}\1${esc}/g
+2s/\([aceg]7\)/${white}\1${esc}/g
+4s/\([aceg]5\)/${white}\1${esc}/g
+6s/\([aceg]3\)/${white}\1${esc}/g
+8s/\([aceg]1\)/${white}\1${esc}/g
+2s/\([bdfh]7\)/${blackblack}\1${esc}/g
+4s/\([bdfh]5\)/${blackwhite}\1${esc}/g
+6s/\([bdfh]3\)/${blackwhite}\1${esc}/g
+8s/\([bdfh]1\)/${blackwhite}\1${esc}/g
+1s/\([aceg]8\)/• /g
+2s/\([bdfh]7\)/• /g
+3s/\([aceg]6\)/• /g
+6s/\([bdfh]3\)/• /g
+7s/\([aceg]2\)/• /g
+8s/\([bdfh]1\)/• /g
+s/[a-z][1-8]/  /g"`
+
+move() {
+
 }
-clear
+
 while [ 1 ]
 do
     tput clear
     echo -en "$desk"
-    read key
-
-    #     
-    click $key
+    echo "$from $to"
+    read from to
+    move from to
 done
