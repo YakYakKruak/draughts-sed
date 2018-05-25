@@ -8,7 +8,7 @@ a4b4c4d4e4f4g4h4
 a3b3c3d3e3f3g3h3
 a2b2c2d2e2f2g2h2
 a1b1c1d1e1f1g1h1
-Input:"
+Input: "
 
 esc=`printf "\033[0m"`
 blackwhite=`printf "\033[40;1m"`
@@ -41,11 +41,11 @@ desk=`echo "$desk" | sed "
 s/[a-z][1-8]/  /g"`
 
 move() {
-    if [ $1 =~ ^[a-h][1-8]$ && $2 =~ ^[a-h][1-8]$ ]
+    if [[ $1 =~ ^[a-h][1-8]$ && $2 =~ ^[a-h][1-8]$ ]]
     then
-        echo '' 
+        echo 1
     else
-        false
+        echo 0
     fi
 }
 
@@ -57,7 +57,7 @@ do
     echo -en "$desk"
     read from to
     result=`move $from $to`
-    if [ result ]
+    if [ "$result" = "1" ]
     then
         if [ $current = "White" ]
         then
@@ -68,4 +68,5 @@ do
     else
         echo "Wrong move!"
     fi
+    sleep .5
 done
