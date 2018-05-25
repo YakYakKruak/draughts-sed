@@ -43,9 +43,20 @@ s/[a-z][1-8]/  /g"`
 move() {
     if [[ $1 =~ ^[a-h][1-8]$ && $2 =~ ^[a-h][1-8]$ ]]
     then
-        echo 1
+        if [ $current = "White" ]
+        then
+            row_from=${1:1:1}
+            row_to=${2:1:1}
+            column_from=`printf %d "'${1:0:1}"`
+            column_to=`printf %d "'${2:0:1}"`
+            column_from=`expr $column_from - 96`
+            column_to=`expr $column_to - 96`
+        else
+            current="White"
+        fi
+        echo "1"
     else
-        echo 0
+        echo "0"
     fi
 }
 
@@ -57,7 +68,7 @@ do
     echo -en "$desk"
     read from to
     result=`move $from $to`
-    if [ "$result" = "1" ]
+    if [ $result = "1" ]
     then
         if [ $current = "White" ]
         then
@@ -68,5 +79,5 @@ do
     else
         echo "Wrong move!"
     fi
-    sleep .5
+    sleep 1
 done
