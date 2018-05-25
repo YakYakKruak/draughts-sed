@@ -41,14 +41,31 @@ desk=`echo "$desk" | sed "
 s/[a-z][1-8]/  /g"`
 
 move() {
-
+    if [ $1 =~ ^[a-h][1-8]$ && $2 =~ ^[a-h][1-8]$ ]
+    then
+        echo '' 
+    else
+        false
+    fi
 }
 
+current="White"
 while [ 1 ]
 do
     tput clear
+    echo $current
     echo -en "$desk"
-    echo "$from $to"
     read from to
-    move from to
+    result=`move $from $to`
+    if [ result ]
+    then
+        if [ $current = "White" ]
+        then
+            current="Black"
+        else
+            current="White"
+        fi
+    else
+        echo "Wrong move!"
+    fi
 done
