@@ -1,32 +1,54 @@
 #!/bin/bash
 
-desk="a8 b8 c8 d8 e8 f8 g8 h8
-a7 b7 c7 d7 e7 f7 g7 h7
-a6 b6 c6 d6 e6 f6 g6 h6
-a5 b5 c5 d5 e5 f5 g5 h5
-a4 b4 c4 d4 e4 f4 g4 h4
-a3 b3 c3 d3 e3 f3 g3 h3
-a2 b2 c2 d2 e2 f2 g2 h2
-a1 b1 c1 d1 e1 f1 g1 h1
+desk="a8b8c8d8e8f8g8h8
+a7b7c7d7e7f7g7h7
+a6b6c6d6e6f6g6h6
+a5b5c5d5e5f5g5h5
+a4b4c4d4e4f4g4h4
+a3b3c3d3e3f3g3h3
+a2b2c2d2e2f2g2h2
+a1b1c1d1e1f1g1h1
 Input:"
 
-esc=`printf '\033'`
-default=$esc'[0m' 
-black=$esc'\[0;30m'
-white=$esc'[1;37m'
-bblack=$esc'\[0;40m'
-bbwhite=$esc'[1;47m'
+esc=`printf "\033[0m"`
+blackwhite=`printf "\033[40;1m"`
+whiteblack=`printf "\033[47;30;1m"`
 
 click() {
-   echo "$1" 
+    desk=`echo "$desk" | sed "
+    1s/\([aceg]8\)/${blackwhite}  ${esc}/g
+    3s/\([aceg]6\)/${blackwhite}  ${esc}/g
+    5s/\([aceg]4\)/${blackwhite}  ${esc}/g
+    7s/\([aceg]2\)/${blackwhite}  ${esc}/g
+    1s/\([bdfh]8\)/${whiteblack}  ${esc}/g
+    3s/\([bdfh]6\)/${whiteblack}  ${esc}/g
+    5s/\([bdfh]4\)/${whiteblack}  ${esc}/g
+    7s/\([bdfh]2\)/${whiteblack}  ${esc}/g
+    2s/\([aceg]7\)/${whiteblack}  ${esc}/g
+    4s/\([aceg]5\)/${whiteblack}  ${esc}/g
+    6s/\([aceg]3\)/${whiteblack}  ${esc}/g
+    8s/\([aceg]1\)/${whiteblack}  ${esc}/g
+    2s/\([bdfh]7\)/${blackwhite}  ${esc}/g
+    4s/\([bdfh]5\)/${blackwhite}  ${esc}/g
+    6s/\([bdfh]3\)/${blackwhite}  ${esc}/g
+    8s/\([bdfh]1\)/${blackwhite}  ${esc}/g
+"`
+#    3s///g
+#    5s///g
+#    7s///g
+#    
+#    2s///g
+#    4s///g
+#    6s///g
+#    8s///g"
 }
-
 clear
 while [ 1 ]
 do
     tput clear
-    printf "%s" "$desk" | tee
+    echo -en "$desk"
     read key
-     
-#    printf "%s%s" "$desk" "$key" | click
+
+    #•     
+    click $key
 done
