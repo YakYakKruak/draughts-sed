@@ -50,38 +50,90 @@ move() {
         column_to=`expr $column_to - 97`
         row_from=`expr 9 - $row_from`
         row_to=`expr 9 - $row_to`
+        if [[ `expr $row_from - $row_to | tr -d -` = 2 && `expr $column_from - $column_to | tr -d -` = 2 ]]
+        then
+            flag=2
+        elif [[ `expr $row_from - $row_to | tr -d -` = 1 && `expr $column_from - $column_to | tr -d -` = 1 ]]
+        then
+            flag=1
+        else
+            echo "error"
+            return
+        fi
+
         if [ $current = "White" ]
         then
-        echo "$desk" | sed "
-            $row_from {
-                s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
-                t ok
-                s/.*/error/
-                q;
-            }
-            $row_to {
-                s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
-                t ok
-                s/.*/error/
-                q;
-            }
-            :ok"
+            if [ $flag = 1 ]
+            then
+                echo "$desk" | sed "
+                    $row_from {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_to {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    :ok"
+            else
+                echo "$desk" | sed "
+                    $row_from {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_from {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_to {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    :ok"
+            fi
         else
-        echo "$desk" | sed "
-            $row_from {
-                s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
-                t ok
-                s/.*/error/
-                q;
-            }
-
-            $row_to {
-                s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
-                t ok
-                s/.*/error/
-                q;
-            }
-            :ok"
+            if [ $flag = 1 ]
+            then
+                echo "$desk" | sed "
+                    $row_from {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_to {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    :ok"
+            else
+                echo "$desk" | sed "
+                    $row_from {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_to {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    :ok"
+            fi
         fi
     else
         echo "error"
