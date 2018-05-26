@@ -50,17 +50,18 @@ move() {
         column_to=`expr $column_to - 97`
         row_from=`expr 9 - $row_from`
         row_to=`expr 9 - $row_to`
+        if [ $current = "White" ]
+        then
         echo "$desk" | sed "
-        /Black/ {
-            b black;
-        }
-        $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)[01]/\1\3/
-        t wmove
-        :wmove
-        $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\30/
-        :black
-        "
-        return 1
+            $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+            $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\30/"
+        else
+        echo "$desk" | sed "
+            $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+            $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\31/"
+        fi
+
+       return 1
     else
         return 0
     fi
@@ -70,7 +71,7 @@ current="White"
 while [ 1 ]
 do
     tput clear
-    echo $current
+    echo "$current's move"
     out=`draw`
     printf "%s" "$out"
     read from to
