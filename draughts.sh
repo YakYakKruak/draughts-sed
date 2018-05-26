@@ -42,30 +42,27 @@ draw() {
 move() {
     if [[ $1 =~ ^[a-h][1-8]$ && $2 =~ ^[a-h][1-8]$ ]]
     then
-        if [ $current = "White" ]
-        then
-            row_from=${1:1:1}
-            row_to=${2:1:1}
-            column_from=`printf %d "'${1:0:1}"`
-            column_to=`printf %d "'${2:0:1}"`
-            column_from=`expr $column_from - 97`
-            column_to=`expr $column_to - 97`
-            echo "$column_from $column_to" > out.txt
-            column_from=`expr 2 * $column_from`
-            column_to=`expr 2 * $column_to`
-            column_from=`expr $column_from + 1`
-            column_to=`expr $column_to + 1`
-            result=`echo $desk | sed "
-            $row_from {
-             
-            } 
-            "` 
-        else
-            sleep .1 
-        fi
-        echo "1"
+        row_from=${1:1:1}
+        row_to=${2:1:1}
+        column_from=`printf %d "'${1:0:1}"`
+        column_to=`printf %d "'${2:0:1}"`
+        column_from=`expr $column_from - 97`
+        column_to=`expr $column_to - 97`
+        row_from=`expr 9 - $row_from`
+        row_to=`expr 9 - $row_to`
+        echo "$desk" | sed "
+        /Black/ {
+            b black;
+        }
+        $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)[01]/\1\3/
+        t wmove
+        :wmove
+        $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\30/
+        :black
+        "
+        return 1
     else
-        echo "0"
+        return 0
     fi
 }
 
@@ -78,8 +75,10 @@ do
     printf "%s" "$out"
     read from to
     result=`move $from $to`
-    if [ $result = "1" ]
+
+    if [ $? = "1" ]
     then
+        desk=$result
         if [ $current = "White" ]
         then
             current="Black"
@@ -89,5 +88,5 @@ do
     else
         echo "Wrong move!"
     fi
-    sleep 1
+    sleep .5
 done
