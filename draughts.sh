@@ -53,17 +53,38 @@ move() {
         if [ $current = "White" ]
         then
         echo "$desk" | sed "
-            $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
-            $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\30/"
+            $row_from {
+                s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                t ok
+                s/.*/error/
+                q;
+            }
+            $row_to {
+                s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
+                t ok
+                s/.*/error/
+                q;
+            }
+            :ok"
         else
         echo "$desk" | sed "
-            $row_from s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
-            $row_to s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\)/\1\31/"
-        fi
+            $row_from {
+                s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                t ok
+                s/.*/error/
+                q;
+            }
 
-       return 1
+            $row_to {
+                s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
+                t ok
+                s/.*/error/
+                q;
+            }
+            :ok"
+        fi
     else
-        return 0
+        echo "error"
     fi
 }
 
@@ -77,7 +98,7 @@ do
     read from to
     result=`move $from $to`
 
-    if [ $? = "1" ]
+    if ! [[ "$result" =~ "error" ]]
     then
         desk=$result
         if [ $current = "White" ]
