@@ -18,25 +18,32 @@ blackblack=`printf "\033[40;30;1m"`
 
 draw() {
     echo "$desk" | sed "
-     1s/\([aceg]8 \)/${black}\1${esc}/g
-     3s/\([aceg]6 \)/${black}\1${esc}/g
-     5s/\([aceg]4 \)/${black}\1${esc}/g
-     7s/\([aceg]2 \)/${black}\1${esc}/g
-     1s/\([bdfh]8 \)/${white}\1${esc}/g
-     3s/\([bdfh]6 \)/${white}\1${esc}/g
-     5s/\([bdfh]4 \)/${white}\1${esc}/g
-     7s/\([bdfh]2 \)/${white}\1${esc}/g
-     2s/\([bdfh]7 \)/${black}\1${esc}/g
-     4s/\([bdfh]5 \)/${black}\1${esc}/g
-     6s/\([bdfh]3 \)/${black}\1${esc}/g
-     8s/\([bdfh]1 \)/${black}\1${esc}/g
-     2s/\([aceg]7 \)/${white}\1${esc}/g
-     4s/\([aceg]5 \)/${white}\1${esc}/g
-     6s/\([aceg]3 \)/${white}\1${esc}/g
-     8s/\([aceg]1 \)/${white}\1${esc}/g
-     s/[a-h][1-8]1 /${blackblack}• ${esc}/g
-     s/[a-h][1-8]0 /${blackwhite}• ${esc}/g
-     s/[a-z][1-8] /  /g"
+        1s/\([aceg]8 \)/${black}\1${esc}/g
+        3s/\([aceg]6 \)/${black}\1${esc}/g
+        5s/\([aceg]4 \)/${black}\1${esc}/g
+        7s/\([aceg]2 \)/${black}\1${esc}/g
+        1s/\([bdfh]8 \)/${white}\1${esc}/g
+        3s/\([bdfh]6 \)/${white}\1${esc}/g
+        5s/\([bdfh]4 \)/${white}\1${esc}/g
+        7s/\([bdfh]2 \)/${white}\1${esc}/g
+        2s/\([bdfh]7 \)/${black}\1${esc}/g
+        4s/\([bdfh]5 \)/${black}\1${esc}/g
+        6s/\([bdfh]3 \)/${black}\1${esc}/g
+        8s/\([bdfh]1 \)/${black}\1${esc}/g
+        2s/\([aceg]7 \)/${white}\1${esc}/g
+        4s/\([aceg]5 \)/${white}\1${esc}/g
+        6s/\([aceg]3 \)/${white}\1${esc}/g
+        8s/\([aceg]1 \)/${white}\1${esc}/g
+        s/[a-h][1-8]1 /${blackblack}• ${esc}/g
+        s/[a-h][1-8]0 /${blackwhite}• ${esc}/g
+        s/[a-z][1-8] /  /g" | sed "/Input/!=" | sed "N; s/\n/ /"  | sed "8s/^8/1/
+                                                                         7s/^7/2/
+                                                                         6s/^6/3/
+                                                                         5s/^5/4/
+                                                                         4s/^4/5/
+                                                                         3s/^3/6/
+                                                                         2s/^2/7/
+                                                                         1s/^1/8/" | sed "/Input/i\  a b c d e f g h"
 }
 
 move() {
@@ -50,6 +57,7 @@ move() {
         column_to=`expr $column_to - 97`
         row_from=`expr 9 - $row_from`
         row_to=`expr 9 - $row_to`
+
         if [[ `expr $row_from - $row_to | tr -d -` = 2 && `expr $column_from - $column_to | tr -d -` = 2 ]]
         then
             flag=2
@@ -60,6 +68,7 @@ move() {
             echo "error"
             return
         fi
+        
 
         if [ $current = "White" ]
         then
@@ -80,6 +89,10 @@ move() {
                     }
                     :ok"
             else
+                column_middle=`expr $column_from + $column_to`
+                row_middle=`expr $row_from + $row_to` 
+                column_middle=`expr $column_middle / 2`
+                row_middle=`expr $row_middle / 2` 
                 echo "$desk" | sed "
                     $row_from {
                         s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
@@ -87,8 +100,8 @@ move() {
                         s/.*/error/
                         q;
                     }
-                    $row_from {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                    $row_middle {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)1/\1\3/
                         t ok
                         s/.*/error/
                         q;
@@ -119,9 +132,19 @@ move() {
                     }
                     :ok"
             else
+                column_middle=`expr $column_from + $column_to`
+                row_middle=`expr $row_from + $row_to` 
+                column_middle=`expr $column_middle / 2`
+                row_middle=`expr $row_middle / 2` 
                 echo "$desk" | sed "
                     $row_from {
                         s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                        t ok
+                        s/.*/error/
+                        q;
+                    }
+                    $row_middle {
+                        s/\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)0/\1\3/
                         t ok
                         s/.*/error/
                         q;
@@ -162,5 +185,6 @@ do
     else
         echo "Wrong move!"
     fi
+
     sleep .5
 done
