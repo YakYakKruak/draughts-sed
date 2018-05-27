@@ -8,7 +8,7 @@ a4 b4 c4 d4 e4 f4 g4 h4
 a3 b30 c3 d30 e3 f30 g3 h30 
 a20 b2 c20 d2 e20 f2 g20 h2 
 a1 b10 c1 d10 e1 f10 g1 h10 
-Input: "
+Input command: "
 
 esc=`printf "\033[0m"`
 blackwhite=`printf "\033[40;1m"`
@@ -36,14 +36,15 @@ draw() {
         8s/\([aceg]1 \)/${white}\1${esc}/g
         s/[a-h][1-8]1 /${blackblack}• ${esc}/g
         s/[a-h][1-8]0 /${blackwhite}• ${esc}/g
-        s/[a-z][1-8] /  /g" | sed "/Input/!=" | sed "N; s/\n/ /"  | sed "8s/^8/1/
-                                                                         7s/^7/2/
-                                                                         6s/^6/3/
-                                                                         5s/^5/4/
-                                                                         4s/^4/5/
-                                                                         3s/^3/6/
-                                                                         2s/^2/7/
-                                                                         1s/^1/8/" | sed "/Input/i\  a b c d e f g h"
+        s/[a-z][1-8] /  /g" | sed "/Input/!=" |
+        sed "N; s/\n/ /"  | sed "8s/^8/1/; 7s/^7/2/; 6s/^6/3/; 5s/^5/4/; 4s/^4/5/; 3s/^3/6/; 2s/^2/7/; 1s/^1/8/" | 
+        sed "/Input/i\  a b c d e f g h"
+}
+
+check_end() {
+    echo "$desk" | sed "
+        s/[a-h][1-8]0/\n0\n/ 
+        s/[a-h][1-8]1/\n1\n/" | sed "/[^01]/d; /^$/d;" | sort | uniq | wc -l
 }
 
 move() {
@@ -68,7 +69,6 @@ move() {
             echo "error"
             return
         fi
-        
 
         if [ $current = "White" ]
         then
@@ -167,10 +167,29 @@ current="White"
 while [ 1 ]
 do
     tput clear
-    echo "$current's move"
+    result=`check_end`
+
+    if [ "$result" = 1 ]
+    then
+        if [ $current = "White" ]
+        then
+            echo "Black's is winners!"
+        else
+            echo "White's is winners!"
+        fi
+        exit
+    fi
+
+    printf "%s\n" "$current's move"
     out=`draw`
     printf "%s" "$out"
     read from to
+
+    if [ "$from" = "bye" ]
+    then
+        exit
+    fi
+
     result=`move $from $to`
 
     if ! [[ "$result" =~ "error" ]]
