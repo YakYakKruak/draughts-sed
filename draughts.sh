@@ -76,13 +76,13 @@ move() {
             then
                 echo "$desk" | sed "
                     $row_from {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_to {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
                         t ok
                         s/.*/error/
                         q;
@@ -95,19 +95,19 @@ move() {
                 row_middle=`expr $row_middle / 2` 
                 echo "$desk" | sed "
                     $row_from {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)0/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_middle {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)1/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)1/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_to {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\30 /
                         t ok
                         s/.*/error/
                         q;
@@ -119,13 +119,13 @@ move() {
             then
                 echo "$desk" | sed "
                     $row_from {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_to {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
                         t ok
                         s/.*/error/
                         q;
@@ -138,19 +138,19 @@ move() {
                 row_middle=`expr $row_middle / 2` 
                 echo "$desk" | sed "
                     $row_from {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_from}\}\)\([a-h][1-8]\)1/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_middle {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)0/\1\3/
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_middle}\}\)\([a-h][1-8]\)0/\1\3/
                         t ok
                         s/.*/error/
                         q;
                     }
                     $row_to {
-                        s/\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
+                        s/^\(\([a-h][1-8][01]\? \)\{${column_to}\}\)\([a-h][1-8]\) /\1\31 /
                         t ok
                         s/.*/error/
                         q;
